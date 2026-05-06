@@ -1,4 +1,47 @@
 package com.example.auth.controller;
 
+import com.example.auth.dto.request.SignInRequest;
+import com.example.auth.dto.request.RefreshRequest;
+import com.example.auth.dto.request.SignOutRequest;
+import com.example.auth.dto.response.RefreshResponse;
+import com.example.auth.dto.response.SignInResponse;
+import com.example.auth.global.dto.ApiResponse;
+import com.example.auth.global.util.ResponseUtil;
+import com.example.auth.service.AuthService;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/auth")
 public class AuthController {
+
+    private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @PostMapping("/signin")
+    public ApiResponse<SignInResponse> signin(@RequestBody SignInRequest request) {
+        // 로그인 성공 시 Access Token과 Refresh Token을 클라이언트에게 내려줍니다.
+        SignInResponse response = authService.login(request);
+        return ResponseUtil.success("로그인에 성공했습니다.", response);
+    }
+
+    @PostMapping("/refresh")
+    public ApiResponse<RefreshResponse> refresh(@RequestBody RefreshRequest request) {
+        // Refresh Token이 유효하면 새로운 토큰 묶음을 발급합니다.
+        RefreshResponse response = authService.refresh(request);
+        return ResponseUtil.success("토큰 재발급에 성공했습니다.", response);
+    }
+
+    @DeleteMapping("/signout")
+    public ApiResponse<Void> signout(@RequestBody SignOutRequest request) {
+        // 로그아웃은 클라이언트가 가진 Refresh Token을 저장소에서 제거하는 방식입니다.
+        authService.logout(request);
+        return ResponseUtil.success("로그아웃에 성공했습니다.");
+    }
 }

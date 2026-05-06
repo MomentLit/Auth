@@ -9,7 +9,4 @@ public class ResponseUtil {
     public static ApiResponse<Void> success(String message){
         return new ApiResponse<>(message,null);
     }
-    public static ApiResponse<Void> fail(String message){
-        return new ApiResponse<>(message,null);
-    }
 }

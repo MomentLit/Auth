@@ -62,13 +62,13 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(subject, null, authorities);
     }
 
-    // 토큰 서명과 만료 시간을 검증합니다. 문제가 있으면 jjwt 예외가 발생합니다.
+    // 토큰 서명과 만료 시간을 검증
     public boolean validateToken(String token) {
         parseClaims(token);
         return true;
     }
 
-    // 로그아웃이나 재발급에서 토큰 주인을 찾을 때 사용합니다.
+    // 로그아웃이나 재발급에서 토큰 주인을 찾을 때 사용
     public String getSubject(String token) {
         return parseClaims(token).getSubject();
     }

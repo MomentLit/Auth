@@ -16,7 +16,7 @@ public class RefreshTokenRepository {
         this.redisTemplate = redisTemplate;
     }
 
-    // Refresh Token은 서버에도 저장해 재발급과 로그아웃 시 유효성을 확인합니다.
+    // Refresh Token은 서버에도 저장해 재발급과 로그아웃 시 유효성을 확인
     public void save(String subject, String refreshToken, long ttlMillis) {
         redisTemplate.opsForValue()
                 .set(createKey(subject), refreshToken, Duration.ofMillis(ttlMillis));

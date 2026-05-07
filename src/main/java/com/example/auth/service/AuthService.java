@@ -40,11 +40,11 @@ public class AuthService {
 
         authValidator.validateAuthenticatedUser(user);
 
+        String role =
+                roleProcessor.normalizeRole(user.role());
+
         List<String> roles =
-                roleProcessor.normalizeRoles(
-                        user.roles(),
-                        user.role()
-                );
+                roleProcessor.toAuthorities(role);
 
         TokenService.TokenPair tokenPair =
                 tokenService.issueTokens(
@@ -52,14 +52,12 @@ public class AuthService {
                         roles
                 );
 
-        return new SignInResponse(
-                user.name(),
-                roleProcessor.firstRole(roles),
+        return SignInResponse.from(
+                user,
+                role,
                 tokenPair.accessToken(),
                 tokenPair.refreshToken(),
-                String.valueOf(
-                        tokenService.accessTokenExpiresInSeconds()
-                )
+                tokenService.accessTokenExpiresInSeconds()
         );
     }
 
@@ -79,7 +77,7 @@ public class AuthService {
         TokenService.TokenPair tokenPair =
                 tokenService.issueTokens(subject, roles);
 
-        return new RefreshResponse(
+        return RefreshResponse.from(
                 tokenPair.accessToken(),
                 tokenPair.refreshToken(),
                 tokenService.accessTokenExpiresInSeconds()

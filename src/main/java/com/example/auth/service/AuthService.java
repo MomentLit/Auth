@@ -52,12 +52,12 @@ public class AuthService {
                         roles
                 );
 
-        return SignInResponse.from(
-                user,
+        return new SignInResponse(
+                user.name(),
                 role,
                 tokenPair.accessToken(),
                 tokenPair.refreshToken(),
-                tokenService.accessTokenExpiresInSeconds()
+                String.valueOf(tokenService.accessTokenExpiresInSeconds())
         );
     }
 
@@ -77,7 +77,7 @@ public class AuthService {
         TokenService.TokenPair tokenPair =
                 tokenService.issueTokens(subject, roles);
 
-        return RefreshResponse.from(
+        return new RefreshResponse(
                 tokenPair.accessToken(),
                 tokenPair.refreshToken(),
                 tokenService.accessTokenExpiresInSeconds()

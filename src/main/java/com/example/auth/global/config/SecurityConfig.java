@@ -26,7 +26,12 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 로그인과 토큰 재발급 API는 인증 없이 접근할 수 있게 열어둠
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/signin", "/auth/refresh").permitAll()
+                        .requestMatchers(
+                                "/auth/signin",
+                                "/auth/refresh",
+                                "/auth/oauth/google",
+                                "/auth/oauth/google/callback"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 // UsernamePasswordAuthenticationFilter 전에 JWT 필터를 실행해 요청 인증을 먼저 처리

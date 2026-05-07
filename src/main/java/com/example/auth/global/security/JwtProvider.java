@@ -6,9 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.Duration;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,12 +31,12 @@ public class JwtProvider {
         this.refreshTokenExpirationMillis = refreshTokenExpiration.toMillis();
     }
 
-    public String createAccessToken(String subject, Collection<String> roles) {
-        return createToken(subject, roles, accessTokenExpirationMillis);
+    public String createAccessToken(String subject, String role) {
+        return createToken(subject, role, accessTokenExpirationMillis);
     }
 
-    public String createRefreshToken(String subject, Collection<String> roles) {
-        return createToken(subject, roles, refreshTokenExpirationMillis);
+    public String createRefreshToken(String subject, String role) {
+        return createToken(subject, role, refreshTokenExpirationMillis);
     }
 
     public long getAccessTokenExpirationMillis() {
@@ -49,17 +47,17 @@ public class JwtProvider {
         return refreshTokenExpirationMillis;
     }
 
-    // JWT 안의 subject와 roles를 Spring Security가 이해하는 Authentication 객체로 바꿉니다.
+    // JWT 안의 subject와 role을 Spring Security가 이해하는 Authentication 객체로 바꿉니다.
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token);
         String subject = claims.getSubject();
-        List<String> roles = claims.get("roles", List.class);
+        String role = claims.get("role", String.class);
 
-        List<SimpleGrantedAuthority> authorities = roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .toList();
-
-        return new UsernamePasswordAuthenticationToken(subject, null, authorities);
+        return new UsernamePasswordAuthenticationToken(
+                subject,
+                null,
+                java.util.List.of(new SimpleGrantedAuthority(role))
+        );
     }
 
     // 토큰 서명과 만료 시간을 검증
@@ -73,13 +71,17 @@ public class JwtProvider {
         return parseClaims(token).getSubject();
     }
 
-    private String createToken(String subject, Collection<String> roles, long expirationMillis) {
+    public String getRole(String token) {
+        return parseClaims(token).get("role", String.class);
+    }
+
+    private String createToken(String subject, String role, long expirationMillis) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + expirationMillis);
 
         return Jwts.builder()
                 .subject(subject)
-                .claim("roles", roles)
+                .claim("role", role)
                 .issuedAt(now)
                 .expiration(expiration)
                 .signWith(secretKey)

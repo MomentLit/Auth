@@ -2,8 +2,6 @@ package com.example.auth.service;
 
 import com.example.auth.global.security.JwtProvider;
 import com.example.auth.infra.RefreshTokenRepository;
-import java.util.List;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,14 +20,14 @@ public class TokenService {
 
     public TokenPair issueTokens(
             String subject,
-            List<String> roles
+            String role
     ) {
 
         String accessToken =
-                jwtProvider.createAccessToken(subject, roles);
+                jwtProvider.createAccessToken(subject, role);
 
         String refreshToken =
-                jwtProvider.createRefreshToken(subject, roles);
+                jwtProvider.createRefreshToken(subject, role);
 
         refreshTokenRepository.save(
                 subject,
@@ -61,14 +59,8 @@ public class TokenService {
         return subject;
     }
 
-    public List<String> getRoles(String token) {
-        Authentication authentication =
-                jwtProvider.getAuthentication(token);
-
-        return authentication.getAuthorities()
-                .stream()
-                .map(authority -> authority.getAuthority())
-                .toList();
+    public String getRole(String token) {
+        return jwtProvider.getRole(token);
     }
 
     public void deleteRefreshToken(String refreshToken) {

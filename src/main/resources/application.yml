@@ -33,3 +33,14 @@ jwt:
 # Auth 서버가 로그인 검증을 위임할 User 서비스 주소입니다.
 user-service:
   base-url: "${USER_SERVICE_BASE_URL:http://localhost:8081}"
+
+# Google OAuth 로그인 설정입니다.
+oauth:
+  google:
+    client-id: "${GOOGLE_CLIENT_ID:}"
+    client-secret: "${GOOGLE_CLIENT_SECRET:}"
+    redirect-uri: "${GOOGLE_REDIRECT_URI:http://localhost:8080/auth/oauth/google/callback}"
+    authorization-uri: "https://accounts.google.com/o/oauth2/v2/auth"
+    token-uri: "https://oauth2.googleapis.com/token"
+    user-info-uri: "https://www.googleapis.com/oauth2/v3/userinfo"
+    scope: "openid email profile"

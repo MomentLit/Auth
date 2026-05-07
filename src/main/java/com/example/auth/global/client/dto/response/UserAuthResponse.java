@@ -1,4 +1,4 @@
-package com.example.auth.global.client.dto;
+package com.example.auth.global.client.dto.response;
 
 import java.util.UUID;
 

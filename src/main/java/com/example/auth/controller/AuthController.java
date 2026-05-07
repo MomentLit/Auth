@@ -3,16 +3,21 @@ package com.example.auth.controller;
 import com.example.auth.dto.request.SignInRequest;
 import com.example.auth.dto.request.RefreshRequest;
 import com.example.auth.dto.request.SignOutRequest;
+import com.example.auth.dto.response.OauthGoogleCallbackResponse;
 import com.example.auth.dto.response.RefreshResponse;
 import com.example.auth.dto.response.SignInResponse;
 import com.example.auth.global.dto.ApiResponse;
 import com.example.auth.global.util.ResponseUtil;
 import com.example.auth.service.AuthService;
+import java.net.URI;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,6 +35,26 @@ public class AuthController {
         // 로그인 성공 시 Access Token과 Refresh Token을 클라이언트에게 내려줍니다.
         SignInResponse response = authService.login(request);
         return ResponseEntity.ok(ResponseUtil.success("로그인에 성공했습니다.", response));
+    }
+
+    @GetMapping("/oauth/google")
+    public ResponseEntity<Void> googleOauth(@RequestParam(required = false) String state) {
+        // Google 로그인 페이지로 302 Redirect합니다.
+        URI redirectUri = authService.createGoogleAuthorizationUri(state);
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .location(redirectUri)
+                .build();
+    }
+
+    @GetMapping("/oauth/google/callback")
+    public ResponseEntity<ApiResponse<OauthGoogleCallbackResponse>> googleOauthCallback(
+            @RequestParam String code,
+            @RequestParam(required = false) String state
+    ) {
+        // Google이 내려준 code로 사용자 정보를 확인한 뒤 JWT를 발급합니다.
+        OauthGoogleCallbackResponse response =
+                authService.loginWithGoogle(code, state);
+        return ResponseEntity.ok(ResponseUtil.success("Google 로그인에 성공했습니다.", response));
     }
 
     @PostMapping("/refresh")

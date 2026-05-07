@@ -3,7 +3,7 @@ package com.example.auth.service;
 import com.example.auth.dto.request.RefreshRequest;
 import com.example.auth.dto.request.SignInRequest;
 import com.example.auth.dto.request.SignOutRequest;
-import com.example.auth.global.client.dto.UserAuthResponse;
+import com.example.auth.global.client.dto.response.UserAuthResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -18,6 +18,12 @@ public class AuthValidator {
     public void validateRefreshRequest(RefreshRequest request) {
         if (request == null || !StringUtils.hasText(request.refreshToken())) {
             throw new IllegalArgumentException("Refresh Token을 입력해주세요.");
+        }
+    }
+
+    public void validateGoogleAuthorizationCode(String code) {
+        if (!StringUtils.hasText(code)) {
+            throw new IllegalArgumentException("Google Authorization Code를 입력해주세요.");
         }
     }
 

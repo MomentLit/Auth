@@ -6,7 +6,7 @@ import com.example.auth.dto.request.SignOutRequest;
 import com.example.auth.dto.response.RefreshResponse;
 import com.example.auth.dto.response.SignInResponse;
 import com.example.auth.global.client.UserServiceClient;
-import com.example.auth.global.client.UserAuthResponse;
+import com.example.auth.global.client.dto.UserAuthResponse;
 import com.example.auth.global.security.JwtProvider;
 import com.example.auth.infra.RefreshTokenRepository;
 import java.util.List;

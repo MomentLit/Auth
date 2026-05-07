@@ -1,4 +1,4 @@
-package com.example.auth.global.client;
+package com.example.auth.global.client.dto;
 
 import java.util.List;
 
@@ -7,5 +7,4 @@ public record UserAuthResponse(
         String name,
         String role,
         List<String> roles
-) {
-}
+) {}

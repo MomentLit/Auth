@@ -48,7 +48,7 @@ public class AuthService {
 
         TokenService.TokenPair tokenPair =
                 tokenService.issueTokens(
-                        String.valueOf(user.userId()),
+                        user.userId().toString(),
                         roles
                 );
 

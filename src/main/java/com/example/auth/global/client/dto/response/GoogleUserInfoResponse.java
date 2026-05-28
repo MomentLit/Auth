@@ -13,6 +13,7 @@ public record GoogleUserInfoResponse(
 
         String name,
 
-        String picture
+        @JsonProperty("picture")
+        String imageUrl
 ) {
 }

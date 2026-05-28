@@ -35,7 +35,7 @@ public class UserServiceClient {
                 request.email(),
                 request.emailVerified(),
                 request.name(),
-                request.picture()
+                request.imageUrl()
         );
 
         return restClient.post()

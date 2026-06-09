@@ -30,7 +30,8 @@ public class SecurityConfig {
                                 "/auth/signin",
                                 "/auth/refresh",
                                 "/auth/oauth/google",
-                                "/auth/oauth/google/callback"
+                                "/auth/oauth/google/callback",
+                                "/actuator/health"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

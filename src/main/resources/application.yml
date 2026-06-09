@@ -4,9 +4,9 @@ spring:
 
   # PostgreSQL 연결 정보입니다. Docker Compose에서는 postgres 서비스 이름을 DB_HOST로 사용합니다.
   datasource:
-    url: "jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:auth_db}"
-    username: "${DB_USERNAME:auth_user}"
-    password: "${DB_PASSWORD:auth_password}"
+    url: "jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:momentlit}?currentSchema=${DB_SCHEMA:auth}"
+    username: "${DB_USERNAME:momentlit}"
+    password: "${DB_PASSWORD:momentlit1234@}"
     driver-class-name: org.postgresql.Driver
 
   # 개발 초기에는 update가 편하고, 운영에서는 validate 또는 none으로 바꾸는 것을 권장합니다.

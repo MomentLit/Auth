@@ -20,9 +20,11 @@ spring:
   # Refresh Token 저장과 로그아웃 처리를 위한 Redis 연결 정보입니다.
   data:
     redis:
-      host: "${REDIS_HOST:localhost}"
-      port: "${REDIS_PORT:6379}"
-      password: "${REDIS_PASSWORD:}"
+      cluster:
+        nodes:
+          - "${REDIS_HOST:localhost}:${REDIS_PORT:6379}"
+      ssl:
+        enabled: ${REDIS_SSL_ENABLED:true}
 
 # JWT 서명에 사용할 비밀키입니다. 운영 환경에서는 환경 변수로 충분히 긴 값을 주입해주세요.
 jwt:

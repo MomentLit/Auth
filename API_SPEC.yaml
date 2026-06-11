@@ -1,0 +1,14 @@
+openapi: 3.0.3
+info:
+  title: "Auth API"
+  description: "No visible controller endpoints were found in the current codebase. Needs confirmation."
+  version: "0.1.0"
+servers:
+  - url: "Needs confirmation"
+    description: "Needs confirmation"
+tags: []
+paths: {}
+components:
+  schemas: {}
+  responses: {}
+  securitySchemes: {}

@@ -9,6 +9,54 @@ servers:
 tags: []
 paths: {}
 components:
-  schemas: {}
-  responses: {}
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "[ERROR: Request/BadRequest] Refresh Token을 입력해주세요."
+        data:
+          nullable: true
+          example: null
+      required:
+        - message
+        - data
+  responses:
+    BadRequestError:
+      description: "Invalid request input."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "[ERROR: Request/BadRequest] Refresh Token을 입력해주세요."
+            data: null
+    UnauthorizedError:
+      description: "Authentication failed or token is invalid."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "[ERROR: Auth/Unauthorized] 유효하지 않은 Refresh Token입니다."
+            data: null
+    GoogleOauthError:
+      description: "Google OAuth request failed."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "[ERROR: Auth/Oauth/Google] Google Access Token을 발급받을 수 없습니다."
+            data: null
+    InternalServerError:
+      description: "Unexpected server error."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "[ERROR: ?/?] 서버 내부 오류가 발생했습니다."
+            data: null
   securitySchemes: {}

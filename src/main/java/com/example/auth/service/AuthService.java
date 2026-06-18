@@ -11,6 +11,7 @@ import com.example.auth.global.client.UserServiceClient;
 import com.example.auth.global.client.dto.response.GoogleTokenResponse;
 import com.example.auth.global.client.dto.response.GoogleUserInfoResponse;
 import com.example.auth.global.client.dto.response.UserAuthResponse;
+import com.example.auth.global.exception.GoogleOauthException;
 import java.net.URI;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -80,7 +81,7 @@ public class AuthService {
                 googleOauthClient.requestToken(code);
 
         if (googleToken == null || !StringUtils.hasText(googleToken.accessToken())) {
-            throw new IllegalArgumentException("Google Access Token을 발급받을 수 없습니다.");
+            throw new GoogleOauthException("Google Access Token을 발급받을 수 없습니다.");
         }
 
         GoogleUserInfoResponse googleUser =

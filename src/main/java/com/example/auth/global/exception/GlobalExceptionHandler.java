@@ -43,6 +43,46 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.fail("[ERROR: Auth/Oauth/Google] " + e.getMessage()));
     }
 
+    @ExceptionHandler(DownstreamServiceException.class)
+    public ResponseEntity<ApiResponse<String>> downstreamServiceHandleException(
+            DownstreamServiceException e
+    ) {
+        if (e.getStatusCode().is4xxClientError()) {
+            log.warn(
+                    "Downstream service client error. service={}, status={}, body={}",
+                    e.getServiceName(),
+                    e.getStatusCode(),
+                    e.getResponseBody()
+            );
+
+            return ResponseEntity.status(e.getStatusCode())
+                    .body(ApiResponse.fail(e.getMessage()));
+        }
+
+        if (e.getStatusCode().isSameCodeAs(HttpStatus.SERVICE_UNAVAILABLE)) {
+            log.error(
+                    "Downstream service unavailable. service={}, body={}",
+                    e.getServiceName(),
+                    e.getResponseBody()
+            );
+
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                    .body(ApiResponse.fail("[ERROR: Auth/Downstream/" + e.getServiceName()
+                            + "] " + e.getServiceName() + " 서비스에 연결할 수 없습니다."));
+        }
+
+        log.error(
+                "Downstream service server error. service={}, status={}, body={}",
+                e.getServiceName(),
+                e.getStatusCode(),
+                e.getResponseBody()
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                .body(ApiResponse.fail("[ERROR: Auth/Downstream/" + e.getServiceName()
+                        + "] " + e.getServiceName() + " 서비스 호출 중 오류가 발생했습니다."));
+    }
+
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<ApiResponse<String>> authHandleException(AuthException e) {
         log.error("AuthException", e);

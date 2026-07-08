@@ -1,7 +1,10 @@
 package com.example.auth.service;
 
 import com.example.auth.global.security.JwtProvider;
+import com.example.auth.global.exception.TokenNotFoundException;
+import com.example.auth.global.exception.UnauthorizedException;
 import com.example.auth.infra.RefreshTokenRepository;
+import io.jsonwebtoken.JwtException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -46,12 +49,16 @@ public class TokenService {
     }
 
     public String getValidRefreshTokenSubject(String refreshToken) {
-        jwtProvider.validateToken(refreshToken);
+        try {
+            jwtProvider.validateToken(refreshToken);
+        } catch (JwtException | IllegalArgumentException exception) {
+            throw new UnauthorizedException("유효하지 않은 Refresh Token입니다.");
+        }
 
         String subject = jwtProvider.getSubject(refreshToken);
 
         if (!refreshTokenRepository.existsBySubjectAndToken(subject, refreshToken)) {
-            throw new IllegalArgumentException(
+            throw new TokenNotFoundException(
                     "저장된 Refresh Token과 일치하지 않습니다."
             );
         }

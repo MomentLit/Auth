@@ -31,7 +31,15 @@ State transitions are documented only where visible in entity or service methods
 
 ## Exception Cases
 
-No project-specific exception handling is visible. HTTP status mapping for these exceptions is Needs confirmation unless explicitly handled in code.
+Project-specific exception handling is visible under `com.example.auth.global.exception`.
+Visible mappings:
+
+- `BadRequestException`: `400 Bad Request`
+- `UnauthorizedException`: `401 Unauthorized`
+- `TokenNotFoundException`: `401 Unauthorized`
+- `GoogleOauthException`: `502 Bad Gateway`
+- Other `AuthException`: `500 Internal Server Error`
+- Other `Exception`: `500 Internal Server Error`
 
 ## API Behavior Policy
 

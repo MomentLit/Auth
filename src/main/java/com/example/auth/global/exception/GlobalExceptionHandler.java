@@ -43,6 +43,22 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.fail("[ERROR: Auth/Oauth/Google] " + e.getMessage()));
     }
 
+    @ExceptionHandler(NaverOauthException.class)
+    public ResponseEntity<ApiResponse<String>> naverOauthHandleException(NaverOauthException e) {
+        log.error("NaverOauthException", e);
+
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                .body(ApiResponse.fail("[ERROR: Auth/Oauth/Naver] " + e.getMessage()));
+    }
+
+    @ExceptionHandler(KakaoOauthException.class)
+    public ResponseEntity<ApiResponse<String>> kakaoOauthHandleException(KakaoOauthException e) {
+        log.error("KakaoOauthException", e);
+
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                .body(ApiResponse.fail("[ERROR: Auth/Oauth/Kakao] " + e.getMessage()));
+    }
+
     @ExceptionHandler(DownstreamServiceException.class)
     public ResponseEntity<ApiResponse<String>> downstreamServiceHandleException(
             DownstreamServiceException e

@@ -1,8 +1,8 @@
 package com.example.auth.global.client;
 
 import com.example.auth.dto.request.SignInRequest;
-import com.example.auth.global.client.dto.request.UserGoogleOauthRequest;
-import com.example.auth.global.client.dto.response.GoogleUserInfoResponse;
+import com.example.auth.global.client.dto.request.UserOauthRequest;
+import com.example.auth.global.client.dto.response.OauthUserProfile;
 import com.example.auth.global.client.dto.response.UserAuthResponse;
 import com.example.auth.global.exception.DownstreamServiceException;
 import com.example.auth.global.exception.UnauthorizedException;
@@ -54,18 +54,12 @@ public class UserServiceClient {
         }
     }
 
-    public UserAuthResponse authenticateGoogle(GoogleUserInfoResponse request) {
-        UserGoogleOauthRequest userRequest = new UserGoogleOauthRequest(
-                request.providerId(),
-                request.email(),
-                request.emailVerified(),
-                request.name(),
-                request.imageUrl()
-        );
+    public UserAuthResponse authenticateOauth(OauthUserProfile profile) {
+        UserOauthRequest userRequest = UserOauthRequest.from(profile);
 
         try {
             return restClient.post()
-                    .uri("/internal/users/oauth/google")
+                    .uri("/internal/users/oauth")
                     .body(userRequest)
                     .retrieve()
                     .body(UserAuthResponse.class);

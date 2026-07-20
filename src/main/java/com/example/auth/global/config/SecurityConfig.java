@@ -31,6 +31,10 @@ public class SecurityConfig {
                                 "/auth/refresh",
                                 "/auth/oauth/google",
                                 "/auth/oauth/google/callback",
+                                "/auth/oauth/naver",
+                                "/auth/oauth/naver/callback",
+                                "/auth/oauth/kakao",
+                                "/auth/oauth/kakao/callback",
                                 "/actuator/health"
                         ).permitAll()
                         .anyRequest().authenticated()

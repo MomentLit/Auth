@@ -7,8 +7,140 @@ servers:
   - url: "Needs confirmation"
     description: "Needs confirmation"
 tags: []
-paths: {}
+paths:
+  /auth/oauth/naver:
+    get:
+      summary: "Redirect to Naver OAuth"
+      parameters:
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "302":
+          description: "Redirects to Naver authorization endpoint."
+  /auth/oauth/naver/callback:
+    get:
+      summary: "Handle Naver OAuth callback"
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "JWT tokens returned after Naver login."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "502":
+          $ref: "#/components/responses/NaverOauthError"
+  /auth/oauth/kakao:
+    get:
+      summary: "Redirect to Kakao OAuth"
+      parameters:
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "302":
+          description: "Redirects to Kakao authorization endpoint."
+  /auth/oauth/kakao/callback:
+    get:
+      summary: "Handle Kakao OAuth callback"
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "JWT tokens returned after Kakao login."
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "502":
+          $ref: "#/components/responses/KakaoOauthError"
 components:
-  schemas: {}
-  responses: {}
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "[ERROR: Request/BadRequest] Refresh Token을 입력해주세요."
+        data:
+          nullable: true
+          example: null
+      required:
+        - message
+        - data
+  responses:
+    BadRequestError:
+      description: "Invalid request input."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "[ERROR: Request/BadRequest] Refresh Token을 입력해주세요."
+            data: null
+    UnauthorizedError:
+      description: "Authentication failed or token is invalid."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "[ERROR: Auth/Unauthorized] 유효하지 않은 Refresh Token입니다."
+            data: null
+    GoogleOauthError:
+      description: "Google OAuth request failed."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "[ERROR: Auth/Oauth/Google] Google Access Token을 발급받을 수 없습니다."
+            data: null
+    NaverOauthError:
+      description: "Naver OAuth request failed."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "[ERROR: Auth/Oauth/Naver] Naver Access Token을 발급받을 수 없습니다."
+            data: null
+    KakaoOauthError:
+      description: "Kakao OAuth request failed."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "[ERROR: Auth/Oauth/Kakao] Kakao Access Token을 발급받을 수 없습니다."
+            data: null
+    InternalServerError:
+      description: "Unexpected server error."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: "[ERROR: ?/?] 서버 내부 오류가 발생했습니다."
+            data: null
   securitySchemes: {}

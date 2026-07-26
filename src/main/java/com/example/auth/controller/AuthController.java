@@ -57,6 +57,42 @@ public class AuthController {
         return ResponseEntity.ok(ResponseUtil.success("Google 로그인에 성공했습니다.", response));
     }
 
+    @GetMapping("/oauth/naver")
+    public ResponseEntity<Void> naverOauth(@RequestParam(required = false) String state) {
+        URI redirectUri = authService.createNaverAuthorizationUri(state);
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .location(redirectUri)
+                .build();
+    }
+
+    @GetMapping("/oauth/naver/callback")
+    public ResponseEntity<ApiResponse<OauthGoogleCallbackResponse>> naverOauthCallback(
+            @RequestParam String code,
+            @RequestParam(required = false) String state
+    ) {
+        OauthGoogleCallbackResponse response =
+                authService.loginWithNaver(code, state);
+        return ResponseEntity.ok(ResponseUtil.success("Naver 로그인에 성공했습니다.", response));
+    }
+
+    @GetMapping("/oauth/kakao")
+    public ResponseEntity<Void> kakaoOauth(@RequestParam(required = false) String state) {
+        URI redirectUri = authService.createKakaoAuthorizationUri(state);
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .location(redirectUri)
+                .build();
+    }
+
+    @GetMapping("/oauth/kakao/callback")
+    public ResponseEntity<ApiResponse<OauthGoogleCallbackResponse>> kakaoOauthCallback(
+            @RequestParam String code,
+            @RequestParam(required = false) String state
+    ) {
+        OauthGoogleCallbackResponse response =
+                authService.loginWithKakao(code, state);
+        return ResponseEntity.ok(ResponseUtil.success("Kakao 로그인에 성공했습니다.", response));
+    }
+
     @PostMapping("/refresh")
     public ResponseEntity<ApiResponse<RefreshResponse>> refresh(@RequestBody RefreshRequest request) {
         // Refresh Token이 유효하면 새로운 토큰 묶음을 발급합니다.

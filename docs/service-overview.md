@@ -43,7 +43,8 @@ No repository or persistence component is visible. Build dependencies include Sp
 
 ## Exception Handling
 
-No project-specific exception handling is visible.
+Project-specific exception handling is implemented under `com.example.auth.global.exception`.
+Auth-specific exceptions extend `AuthException` and are handled by `GlobalExceptionHandler`.
 
 ## Test Structure
 

@@ -16,4 +16,16 @@ public record GoogleUserInfoResponse(
         @JsonProperty("picture")
         String imageUrl
 ) {
+    private static final String PROVIDER = "GOOGLE";
+
+    public OauthUserProfile toProfile() {
+        return new OauthUserProfile(
+                PROVIDER,
+                providerId,
+                email,
+                emailVerified,
+                name,
+                imageUrl
+        );
+    }
 }
